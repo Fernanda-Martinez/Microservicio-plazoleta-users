@@ -1,6 +1,6 @@
 package com.pragma.powerup.application.handler.impl;
 
-import com.pragma.powerup.application.dto.request.CrearUsuarioRequest;
+import com.pragma.powerup.application.dto.request.CrearUsuarioRequestDto;
 import com.pragma.powerup.application.handler.IUsuarioHandler;
 import com.pragma.powerup.application.mapper.IUsuarioRequestMapper;
 import com.pragma.powerup.application.mapper.IUsuarioResponseMapper;
@@ -28,7 +28,7 @@ public class UsuarioHandler implements IUsuarioHandler {
 
 
     @Override
-    public Boolean crear(CrearUsuarioRequest usuarioRequest) {
+    public Boolean crear(CrearUsuarioRequestDto usuarioRequest) {
         Usuarios usuario = usuarioRequestMapper.toUsuarioModel(usuarioRequest);
 
         String claveEncriptada = PassEncoder.passwordEncoder(usuario.getClave());

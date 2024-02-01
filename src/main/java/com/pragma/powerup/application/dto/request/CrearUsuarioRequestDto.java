@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 
-public class CrearUsuarioRequest {
+public class CrearUsuarioRequestDto {
 
     private String nombre;
     private String apellido;

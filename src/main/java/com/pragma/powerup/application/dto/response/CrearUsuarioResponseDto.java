@@ -8,7 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 
-public class CrearUsuarioResponse {
+public class CrearUsuarioResponseDto {
 
     private String nombre;
     private String apellido;
