@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.persistence.Id;
 import java.util.Date;
 
 @Getter
@@ -14,7 +13,7 @@ import java.util.Date;
 
 
 public class Usuarios {
-    @Id
+
     private int id;
     private String nombre;
     private String apellido;
@@ -24,13 +23,5 @@ public class Usuarios {
     private String correo;
     private String clave;
     private int idRol;
-
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
 
 }
