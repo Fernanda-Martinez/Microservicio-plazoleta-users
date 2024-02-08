@@ -21,10 +21,6 @@ public class UsuarioRestController {
 
     private final UsuarioHandler usuarioHandler;
 
-    public UsuarioRestController(UsuarioHandler usuarioHandler) {
-        this.usuarioHandler = usuarioHandler;
-    }
-
     @Operation(summary = "Agrega un nuevo usuario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "usuario creado", content = @Content),
