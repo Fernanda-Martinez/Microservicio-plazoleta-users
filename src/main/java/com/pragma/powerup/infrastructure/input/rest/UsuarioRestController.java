@@ -27,8 +27,8 @@ public class UsuarioRestController {
             @ApiResponse(responseCode = "409", description = "El usuario ya existe", content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<Void> crear(@RequestBody CrearUsuarioRequestDto usuarioRequest) {
-        usuarioHandler.crear(usuarioRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Boolean> crear(@RequestBody CrearUsuarioRequestDto usuarioRequest) {
+        Boolean user = usuarioHandler.crear(usuarioRequest);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }
