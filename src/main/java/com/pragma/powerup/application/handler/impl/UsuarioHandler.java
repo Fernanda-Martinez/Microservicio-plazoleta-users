@@ -48,7 +48,26 @@ public class UsuarioHandler implements IUsuarioHandler {
         String tokenRole = tokenHandler.getTokenRole(crearUsuarioRequestDto.getToken());
 
         if(tokenRole.equals(TOKEN_ROLE_ANONYMOUS) && getRolName(crearUsuarioRequestDto.getIdRol()).equals("cliente")){
-            return authenticationResponseMapper.toResponse(TOKEN_EMPTY);
+            crearUsuarioRequestDto.setClave(
+                    encoderHandler.encodePassword(crearUsuarioRequestDto.getClave())
+            );
+            Usuarios user = usuarioRequestMapper.toUser(crearUsuarioRequestDto);
+            usuarioServicePort.crear(user);
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(
+                    crearUsuarioRequestDto.getCorreo()
+            );
+            List<String> roles = userDetails
+                    .getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+
+            return authenticationResponseMapper.toResponse(
+                    tokenHandler.createToken(
+                            userDetails.getUsername(), userDetails.getUsername(), roles
+                    )
+            );
         }
 
         if (validateRules(tokenRole, getRolName(crearUsuarioRequestDto.getIdRol()))
