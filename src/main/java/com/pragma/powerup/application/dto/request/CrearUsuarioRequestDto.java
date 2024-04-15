@@ -27,5 +27,6 @@ public class CrearUsuarioRequestDto {
     @Email(message = "El correo no es válido")
     private String correo;
     private String clave;
-    private int idRol = 2;
+    private int idRol;
+    private String token;
 }

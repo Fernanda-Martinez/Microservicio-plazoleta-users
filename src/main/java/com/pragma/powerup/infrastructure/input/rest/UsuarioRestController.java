@@ -1,6 +1,7 @@
 package com.pragma.powerup.infrastructure.input.rest;
 
 import com.pragma.powerup.application.dto.request.CrearUsuarioRequestDto;
+import com.pragma.powerup.application.dto.response.AuthenticationResponseDto;
 import com.pragma.powerup.application.handler.impl.UsuarioHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,8 +28,8 @@ public class UsuarioRestController {
             @ApiResponse(responseCode = "409", description = "El usuario ya existe", content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<Boolean> crear(@RequestBody CrearUsuarioRequestDto usuarioRequest) {
-        Boolean user = usuarioHandler.crear(usuarioRequest);
+    public ResponseEntity<AuthenticationResponseDto> crear(@RequestBody CrearUsuarioRequestDto usuarioRequest) {
+        AuthenticationResponseDto user = usuarioHandler.crear(usuarioRequest);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }

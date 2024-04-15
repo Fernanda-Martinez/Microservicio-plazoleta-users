@@ -3,16 +3,17 @@ package com.pragma.powerup.infrastructure.out.jpa.mapper;
 import com.pragma.powerup.domain.model.Usuarios;
 import com.pragma.powerup.infrastructure.out.jpa.entity.UsuarioEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        unmappedSourcePolicy = ReportingPolicy.IGNORE
-)
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+        unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IUsuarioEntityMapper {
-    UsuarioEntity toEntity(Usuarios user);
-    Usuarios toUsuarioModel(UsuarioEntity usuarioEntity);
-    List<Usuarios> toUsuarioModelList(List<UsuarioEntity> userEntityList);
+    @Mapping(source = "user.id", target = "id")
+    @Mapping(source = "user.nombre", target = "nombre")
+    UsuarioEntity toEntidad(Usuarios user);
+
+    @Mapping(source = "userEntity.idRol", target = "idRol")
+    Usuarios toUsuario(UsuarioEntity userEntity);
 }

@@ -18,4 +18,24 @@ public class UsuarioUseCase implements IUsuarioServicePort {
 
         return true;
     }
+
+    @Override
+    public boolean validateOwnerRole(int id) {
+        return this.usuarioPersistencePort.validateOwnerRole(id);
+    }
+
+    @Override
+    public boolean validateRestaurantEmployee(int idEmployee, int idRestaurant) {
+        return false;
+    }
+
+    @Override
+    public boolean validateClientRole(int idClient) {
+        return false;
+    }
+
+    @Override
+    public Usuarios getUser(int idUser) {
+        return null;
+    }
 }

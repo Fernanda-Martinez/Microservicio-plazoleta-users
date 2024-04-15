@@ -1,6 +1,6 @@
 package com.pragma.powerup.application.mapper;
 
-import com.pragma.powerup.application.dto.response.CrearUsuarioResponseDto;
+import com.pragma.powerup.application.dto.response.UsuarioInfoResponseDto;
 import com.pragma.powerup.domain.model.Usuarios;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -10,5 +10,5 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 
 public interface IUsuarioResponseMapper {
-    CrearUsuarioResponseDto toResponse(Usuarios usuarios);
+    UsuarioInfoResponseDto toUsuarioInfo(Usuarios usuarios);
 }
