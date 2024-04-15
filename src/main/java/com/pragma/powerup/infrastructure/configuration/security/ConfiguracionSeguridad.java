@@ -70,6 +70,7 @@ public class ConfiguracionSeguridad{
 
     @Bean
     PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 }
