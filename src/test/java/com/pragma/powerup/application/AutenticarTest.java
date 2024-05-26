@@ -7,7 +7,6 @@ import com.pragma.powerup.application.handler.ITokenHandler;
 import com.pragma.powerup.application.handler.impl.UsuarioHandler;
 import com.pragma.powerup.application.mapper.IAuthenticationResponseMapper;
 import com.pragma.powerup.application.mapper.IUsuarioRequestMapper;
-import com.pragma.powerup.application.mapper.IUsuarioResponseMapper;
 import com.pragma.powerup.domain.Constants;
 import com.pragma.powerup.domain.api.IUsuarioServicePort;
 import com.pragma.powerup.domain.api.IValidatorServicePort;

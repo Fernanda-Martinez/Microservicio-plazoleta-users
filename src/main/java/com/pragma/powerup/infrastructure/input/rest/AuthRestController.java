@@ -4,6 +4,7 @@ import com.pragma.powerup.application.dto.request.CrearUsuarioRequestDto;
 import com.pragma.powerup.application.dto.request.LoginRequestDto;
 import com.pragma.powerup.application.dto.response.AuthenticationResponseDto;
 import com.pragma.powerup.application.handler.IUsuarioHandler;
+import com.pragma.powerup.infrastructure.exception.PasswordIncorrectException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,8 +45,13 @@ public class AuthRestController {
     @Operation(summary = "Login for the user")
     @ApiResponse(responseCode = "200", description = "Login success", content = @Content)
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        AuthenticationResponseDto resp = userHandler.login(loginRequestDto);
+    public ResponseEntity<AuthenticationResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) throws PasswordIncorrectException {
+        AuthenticationResponseDto resp = null;
+        try {
+            resp = userHandler.login(loginRequestDto);
+        } catch (PasswordIncorrectException e) {
+            throw new PasswordIncorrectException("La contraseña es incorrecta");
+        }
 
         return ResponseEntity
                 .status(HttpStatus.OK)

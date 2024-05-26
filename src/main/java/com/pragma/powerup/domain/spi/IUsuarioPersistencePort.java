@@ -8,6 +8,8 @@ public interface IUsuarioPersistencePort {
 
     boolean validateOwnerRole(int id);
 
+    boolean validateAdminRole(int id);
+
     boolean validateRestaurantEmployee(int idEmployee, int idRestaurant);
 
     boolean validateClientRole(int idClient);

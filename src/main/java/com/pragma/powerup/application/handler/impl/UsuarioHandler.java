@@ -3,17 +3,19 @@ package com.pragma.powerup.application.handler.impl;
 import com.pragma.powerup.application.dto.request.CrearUsuarioRequestDto;
 import com.pragma.powerup.application.dto.request.LoginRequestDto;
 import com.pragma.powerup.application.dto.response.AuthenticationResponseDto;
-import com.pragma.powerup.application.dto.response.UsuarioInfoResponseDto;
+import com.pragma.powerup.application.dto.response.UserInfoResponseDto;
 import com.pragma.powerup.application.handler.IEncoderHandler;
 import com.pragma.powerup.application.handler.ITokenHandler;
 import com.pragma.powerup.application.handler.IUsuarioHandler;
 import com.pragma.powerup.application.mapper.IAuthenticationResponseMapper;
 import com.pragma.powerup.application.mapper.IUsuarioRequestMapper;
-import com.pragma.powerup.application.mapper.IUsuarioResponseMapper;
 import com.pragma.powerup.domain.Constants;
 import com.pragma.powerup.domain.api.IUsuarioServicePort;
 import com.pragma.powerup.domain.api.IValidatorServicePort;
 import com.pragma.powerup.domain.model.Usuarios;
+import com.pragma.powerup.infrastructure.exception.PasswordIncorrectException;
+import com.pragma.powerup.infrastructure.exception.UsernameIncorrectException;
+import com.pragma.powerup.infrastructure.exception.UsuarioNoEmpleado;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +40,6 @@ public class UsuarioHandler implements IUsuarioHandler {
     private final ITokenHandler tokenHandler;
     private final UserDetailsService userDetailsService;
     private final IValidatorServicePort validatorServicePort;
-    private final IUsuarioResponseMapper usuarioResponseMapper;
 
     private static final String TOKEN_ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
     private static final String TOKEN_EMPTY = "";
@@ -72,6 +73,15 @@ public class UsuarioHandler implements IUsuarioHandler {
 
         if (validateRules(tokenRole, getRolName(crearUsuarioRequestDto.getIdRol()))
         ) {
+
+            if(crearUsuarioRequestDto.getIdRol() == 3 && crearUsuarioRequestDto.getIdRestaurante() == null){
+                throw new UsuarioNoEmpleado("El usuario debe tener un idRestaurante");
+            }
+
+            if(crearUsuarioRequestDto.getIdRol() != 3 && crearUsuarioRequestDto.getIdRestaurante() != null){
+                throw new UsuarioNoEmpleado("El usuario no es un empleado, no debe llevar idRestaurante");
+            }
+
             crearUsuarioRequestDto.setClave(
                     encoderHandler.encodePassword(crearUsuarioRequestDto.getClave())
             );
@@ -93,11 +103,11 @@ public class UsuarioHandler implements IUsuarioHandler {
                     )
             );
         }
-        return authenticationResponseMapper.toResponse(TOKEN_EMPTY);
+        return authenticationResponseMapper.toResponse("La operacion no es valida porque no se cumplen los criterios de rol");
     }
 
     @Override
-    public AuthenticationResponseDto login(LoginRequestDto loginRequestDto) {
+    public AuthenticationResponseDto login(LoginRequestDto loginRequestDto)  {
 
         UserDetails userDetails;
 
@@ -105,7 +115,7 @@ public class UsuarioHandler implements IUsuarioHandler {
             userDetails = userDetailsService.loadUserByUsername(loginRequestDto.getEmail());
         }
         catch (UsernameNotFoundException e) {
-            return null;
+            throw new UsernameIncorrectException("El usuario no existe");
         }
 
         if(encoderHandler.decodePassword(loginRequestDto.getPassword(), userDetails.getPassword()))
@@ -121,8 +131,9 @@ public class UsuarioHandler implements IUsuarioHandler {
                             userDetails.getUsername(), userDetails.getUsername(), roles
                     )
             );
+        }else{
+            throw new PasswordIncorrectException("La contraseña es incorrecta");
         }
-        return null;
     }
 
     @Override
@@ -136,16 +147,33 @@ public class UsuarioHandler implements IUsuarioHandler {
     }
 
     @Override
-    public UsuarioInfoResponseDto getClient(int idClient) {
-        if(usuarioServicePort.validateClientRole(idClient)){
-            return usuarioResponseMapper.toUsuarioInfo(usuarioServicePort.getUser(idClient));
-        }
-        return null;
+    public boolean validateAdminRole(int id) {
+        return  usuarioServicePort.validateAdminRole(id);
     }
 
+    @Override
+    public boolean validateClientRole(int id) {
+        return  usuarioServicePort.validateClientRole(id);
+    }
+
+    @Override
+    public UserInfoResponseDto getUser(int idUsuario){
+        Usuarios usuario = usuarioServicePort.getUser(idUsuario);
+
+        UserInfoResponseDto responseDto = new UserInfoResponseDto();
+        responseDto.setNombre(usuario.getNombre());
+        responseDto.setTelefono(usuario.getCelular());
+        responseDto.setEmail(usuario.getCorreo());
+
+        return responseDto;
+    }
 
     public boolean validateRules(String tokenRole, String requestRole){
-        return validatorServicePort.rolesValidator(tokenRole, requestRole);
+        if(!validatorServicePort.rolesValidator(tokenRole, requestRole))
+        {
+            return false;
+        }
+        return true;
     }
 
     private String getRolName(int id) {

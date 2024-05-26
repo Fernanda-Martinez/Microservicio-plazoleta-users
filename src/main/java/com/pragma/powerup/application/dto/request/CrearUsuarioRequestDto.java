@@ -29,4 +29,5 @@ public class CrearUsuarioRequestDto {
     private String clave;
     private int idRol;
     private String token;
+    private Integer idRestaurante = null;
 }

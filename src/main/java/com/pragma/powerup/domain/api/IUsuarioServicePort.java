@@ -7,6 +7,8 @@ public interface IUsuarioServicePort {
 
     Boolean crear(Usuarios user);
 
+    boolean validateAdminRole(int id);
+
     boolean validateOwnerRole(int id);
 
     boolean validateRestaurantEmployee(int idEmployee, int idRestaurant);

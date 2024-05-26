@@ -3,11 +3,13 @@ package com.pragma.powerup.infrastructure.out.jpa.adapter;
 import com.pragma.powerup.domain.Constants;
 import com.pragma.powerup.domain.model.Usuarios;
 import com.pragma.powerup.domain.spi.IUsuarioPersistencePort;
+import com.pragma.powerup.infrastructure.exception.NoDataFoundException;
 import com.pragma.powerup.infrastructure.exception.UserAlreadyExistsException;
 import com.pragma.powerup.infrastructure.out.jpa.entity.UsuarioEntity;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IUsuarioEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IUsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
@@ -40,18 +42,47 @@ public class UsuarioJpaAdapter implements IUsuarioPersistencePort {
     }
 
     @Override
+    public boolean validateAdminRole(int id) {
+        Optional<UsuarioEntity> adminInfo = usuarioRepository.findById(id);
+        if(adminInfo.isPresent()){
+            UsuarioEntity admin = adminInfo.get();
+            return getRolName(admin.getIdRol()).equals(Constants.REGISTER_ROLE_ADMIN);
+        }
+        return false;
+    }
+
+    @Override
     public boolean validateRestaurantEmployee(int idEmployee, int idRestaurant) {
+        Optional<UsuarioEntity> empleado = usuarioRepository.findById(idEmployee);
+
+        if(empleado.get().getIdRestaurante() == idRestaurant){
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean validateClientRole(int idClient) {
+
+        Optional<UsuarioEntity> clientInfo = usuarioRepository.findById(idClient);
+        if(clientInfo.isPresent()){
+            UsuarioEntity client = clientInfo.get();
+            return getRolName(client.getIdRol()).equals(Constants.CLIENT);
+        }
         return false;
+
     }
 
     @Override
     public Usuarios getUser(int idUser) {
-        return null;
+        Optional<UsuarioEntity> usuarioEntity = usuarioRepository.findById(idUser);
+
+        if(usuarioEntity.isEmpty()){
+            throw new UsernameNotFoundException("El usuario no existe");
+        }
+
+
+        return usuarioEntityMapper.toUsuario(usuarioEntity.get());
     }
 
 

@@ -4,6 +4,7 @@ import com.pragma.powerup.application.handler.ITokenHandler;
 import com.pragma.powerup.domain.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ public class TokenHandler implements ITokenHandler {
     private static final int ACCESS_TOKEN_VALIDITY_SECONDS = 10800;
     private static final String NAME = "name";
     private static final String TOKEN_EMPTY = "";
+    private static final String TOKEN_ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
     @Override
     public String createToken(String user, String email, List<String> roles) {
 
@@ -70,16 +72,25 @@ public class TokenHandler implements ITokenHandler {
 
     @Override
     public String getTokenRole(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(ACCESS_TOKEN_SECRET.getBytes())
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(ACCESS_TOKEN_SECRET.getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        // Obtenemos el rol de las reclamaciones del token
-        List<String> roles = (List<String>) claims.get(Constants.ROLE);
+            // Obtenemos el rol de las reclamaciones del token
+            List<String> roles = (List<String>) claims.get(Constants.ROLE);
 
-        // Verificamos si hay roles presentes en el token y devolvemos el primero
-        return (roles != null && !roles.isEmpty()) ? roles.get(0) : TOKEN_EMPTY;
+            // Verificamos si hay roles presentes en el token y devolvemos el primero
+            return (roles != null && !roles.isEmpty()) ? roles.get(0) : TOKEN_EMPTY;
+        }catch (MalformedJwtException e) {
+            return TOKEN_ROLE_ANONYMOUS;
+        }
+
+
+
+
+
     }
 
 }

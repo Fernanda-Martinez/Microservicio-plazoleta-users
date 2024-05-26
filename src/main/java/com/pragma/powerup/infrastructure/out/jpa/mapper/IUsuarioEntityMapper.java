@@ -15,5 +15,9 @@ public interface IUsuarioEntityMapper {
     UsuarioEntity toEntidad(Usuarios user);
 
     @Mapping(source = "userEntity.idRol", target = "idRol")
+   // @Mapping(source = "restaurantId", target = "restaurantId")
     Usuarios toUsuario(UsuarioEntity userEntity);
+
+
+
 }

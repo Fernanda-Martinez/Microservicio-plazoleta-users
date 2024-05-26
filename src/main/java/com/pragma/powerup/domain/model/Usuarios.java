@@ -21,5 +21,6 @@ public class Usuarios {
     private String correo;
     private String clave;
     private int idRol;
+    private Integer idRestaurante;
 
 }

@@ -34,5 +34,6 @@ public class UsuarioEntity {
     @Column(length = 45)
     private String clave;
     private int idRol;
+    private Integer idRestaurante;
 
 }

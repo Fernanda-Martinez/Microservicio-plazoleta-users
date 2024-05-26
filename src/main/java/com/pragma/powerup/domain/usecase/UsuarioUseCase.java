@@ -25,17 +25,26 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     }
 
     @Override
+    public boolean validateAdminRole(int id) {
+        return this.usuarioPersistencePort.validateAdminRole(id);
+    }
+
+    @Override
     public boolean validateRestaurantEmployee(int idEmployee, int idRestaurant) {
-        return false;
+
+        return this.usuarioPersistencePort.validateRestaurantEmployee(idEmployee, idRestaurant);
     }
 
     @Override
     public boolean validateClientRole(int idClient) {
-        return false;
+
+        return this.usuarioPersistencePort.validateClientRole(idClient);
     }
 
     @Override
     public Usuarios getUser(int idUser) {
-        return null;
+
+        return this.usuarioPersistencePort.getUser(idUser);
+
     }
 }
