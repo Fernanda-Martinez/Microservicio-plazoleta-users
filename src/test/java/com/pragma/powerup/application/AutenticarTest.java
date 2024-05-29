@@ -181,6 +181,7 @@ class AutenticarTest {
         requestDto.setCorreo("empleado@gmail.com");
         requestDto.setClave("123");
         requestDto.setIdRol(3);
+        requestDto.setIdRestaurante(1);
 
     when(userDetailsService.loadUserByUsername("empleado@gmail.com")).thenReturn(userDetails);
 
@@ -194,6 +195,7 @@ class AutenticarTest {
         user.setCorreo("empleado@gmail.com");
         user.setClave("passwordEncriptada");
         user.setIdRol(3);
+        user.setIdRestaurante(1);
 
     AuthenticationResponseDto authenticationResponseDto = new AuthenticationResponseDto();
         authenticationResponseDto.setToken("Token");
